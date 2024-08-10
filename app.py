@@ -24,7 +24,7 @@ def get_recommendations(user_id, num_recommendations=5):
 
         for similar_user in similar_users.index:
             similar_user_ratings = user_movie_matrix.loc[similar_user].dropna()
-            recommended_movies = recommended_movies.append(similar_user_ratings)
+            recommended_movies = pd.concat([recommended_movies, similar_user_ratings])
 
         recommended_movies = recommended_movies.groupby(recommended_movies.index).mean()
         recommended_movies = recommended_movies.drop(user_ratings.index, errors='ignore')
