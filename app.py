@@ -1,3 +1,5 @@
+!pip install surprise
+
 import streamlit as st
 import pandas as pd
 from surprise import Dataset, KNNBasic
