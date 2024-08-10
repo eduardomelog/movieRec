@@ -15,8 +15,10 @@ user_movie_matrix = ratings_df.pivot_table(index='user_id', columns='movie_id', 
 def get_recommendations(user_id, num_recommendations=5):
     if user_id in user_movie_matrix.index:
         user_ratings = user_movie_matrix.loc[user_id].dropna()
-        similar_users = user_movie_matrix.corrwith(user_ratings)
-        similar_users = similar_users.dropna().sort_values(ascending=False).head(10)
+        similar_users = user_movie_matrix.corrwith(user_ratings).dropna()
+
+        # Asegurar que solo se consideran usuarios válidos
+        similar_users = similar_users[similar_users.index.isin(user_movie_matrix.index)].sort_values(ascending=False).head(10)
 
         recommended_movies = pd.Series(dtype='float64')
 
