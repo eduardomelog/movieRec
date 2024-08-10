@@ -1,5 +1,1 @@
-streamlit
-pandas
-scikit-surprise==1.1.1  # Puedes intentar fijar una versión específica
-Cython
-numpy
+
