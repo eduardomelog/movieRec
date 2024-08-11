@@ -2,22 +2,22 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Cargar datos
+# Load data
 movies_df = pd.read_csv('https://files.grouplens.org/datasets/movielens/ml-100k/u.item', sep='|', encoding='ISO-8859-1', 
                         header=None, usecols=[0, 1], names=['movie_id', 'title'])
 ratings_df = pd.read_csv('https://files.grouplens.org/datasets/movielens/ml-100k/u.data', sep='\t', encoding='ISO-8859-1', 
                          header=None, usecols=[0, 1, 2], names=['user_id', 'movie_id', 'rating'])
 
-# Crear una tabla dinámica con usuarios y calificaciones
+# Create a user-movie rating matrix
 user_movie_matrix = ratings_df.pivot_table(index='user_id', columns='movie_id', values='rating')
 
-# Función para calcular las recomendaciones
+# Function to generate recommendations
 def get_recommendations(user_id, num_recommendations=5):
     if user_id in user_movie_matrix.index:
         user_ratings = user_movie_matrix.loc[user_id].dropna()
         similar_users = user_movie_matrix.corrwith(user_ratings).dropna()
 
-        # Asegurar que solo se consideran usuarios válidos
+        # Ensure only valid users are considered
         similar_users = similar_users[similar_users.index.isin(user_movie_matrix.index)].sort_values(ascending=False).head(10)
 
         recommended_movies = pd.Series(dtype='float64')
@@ -35,18 +35,21 @@ def get_recommendations(user_id, num_recommendations=5):
         return pd.DataFrame(columns=['title'])
 
 # Streamlit App
-st.title("Sistema de Recomendación de Películas")
+st.title("Movie Recommendation System")
 
-user_id = st.number_input("Ingrese su ID de usuario", min_value=1, max_value=943, step=1)
+# Display the image
+st.image('images/movies.png', use_column_width=True)
 
-if st.button("Recomendar"):
+user_id = st.number_input("Enter your user ID", min_value=1, max_value=943, step=1)
+
+if st.button("Recommend"):
     recommendations = get_recommendations(user_id)
     if not recommendations.empty:
-        st.write("Películas que el usuario ha visto (mostrando solo las primeras 10):")
+        st.write("Movies the user has watched (showing only the first 10):")
         watched_titles = movies_df[movies_df['movie_id'].isin(user_movie_matrix.loc[user_id].dropna().index)]['title'].head(10)
         st.write(watched_titles.tolist())
         
-        st.write("Películas recomendadas:")
+        st.write("Recommended movies:")
         st.write(recommendations['title'].tolist())
     else:
-        st.write("No se encontraron recomendaciones para este usuario.")
+        st.write("No recommendations found for this user.")
