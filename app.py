@@ -42,8 +42,8 @@ user_id = st.number_input("Ingrese su ID de usuario", min_value=1, max_value=943
 if st.button("Recomendar"):
     recommendations = get_recommendations(user_id)
     if not recommendations.empty:
-        st.write("Películas que el usuario ha visto:")
-        watched_titles = movies_df[movies_df['movie_id'].isin(user_movie_matrix.loc[user_id].dropna().index)]['title']
+        st.write("Películas que el usuario ha visto (mostrando solo las primeras 10):")
+        watched_titles = movies_df[movies_df['movie_id'].isin(user_movie_matrix.loc[user_id].dropna().index)]['title'].head(10)
         st.write(watched_titles.tolist())
         
         st.write("Películas recomendadas:")
