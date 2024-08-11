@@ -1,27 +1,12 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import random
 
-# Generar nombres aleatorios y asociarlos a IDs de usuario
-user_names = ["User_" + str(i) for i in range(1, 31)]
-user_ids = random.sample(range(1, 944), 30)
-user_dict = dict(zip(user_names, user_ids))
-
-# Cargar datos de películas y calificaciones
+# Cargar datos
 movies_df = pd.read_csv('https://files.grouplens.org/datasets/movielens/ml-100k/u.item', sep='|', encoding='ISO-8859-1', 
                         header=None, usecols=[0, 1], names=['movie_id', 'title'])
 ratings_df = pd.read_csv('https://files.grouplens.org/datasets/movielens/ml-100k/u.data', sep='\t', encoding='ISO-8859-1', 
                          header=None, usecols=[0, 1, 2], names=['user_id', 'movie_id', 'rating'])
-
-# Extraer el año de estreno de los títulos de las películas
-movies_df['year'] = movies_df['title'].str.extract(r'\((\d{4})\)').astype(float)
-
-# Filtrar películas con año de estreno mayor que 2000
-movies_df = movies_df[movies_df['year'] > 2000]
-
-# Filtrar las calificaciones para que solo incluyan las películas filtradas
-ratings_df = ratings_df[ratings_df['movie_id'].isin(movies_df['movie_id'])]
 
 # Crear una tabla dinámica con usuarios y calificaciones
 user_movie_matrix = ratings_df.pivot_table(index='user_id', columns='movie_id', values='rating')
@@ -52,14 +37,12 @@ def get_recommendations(user_id, num_recommendations=5):
 # Streamlit App
 st.title("Sistema de Recomendación de Películas")
 
-# Selectbox para seleccionar un usuario
-selected_user_name = st.selectbox("Selecciona un usuario", list(user_dict.keys()))
-user_id = user_dict[selected_user_name]
+user_id = st.number_input("Ingrese su ID de usuario", min_value=1, max_value=943, step=1)
 
 if st.button("Recomendar"):
     recommendations = get_recommendations(user_id)
     if not recommendations.empty:
-        st.write(f"Películas que {selected_user_name} ha visto (mostrando solo las primeras 10):")
+        st.write("Películas que el usuario ha visto (mostrando solo las primeras 10):")
         watched_titles = movies_df[movies_df['movie_id'].isin(user_movie_matrix.loc[user_id].dropna().index)]['title'].head(10)
         st.write(watched_titles.tolist())
         
