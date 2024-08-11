@@ -37,8 +37,8 @@ def get_recommendations(user_id, num_recommendations=5):
 # Streamlit App
 st.title("Movie Recommendation System")
 
-# Display the image
-st.image('images/movies.png', use_column_width=True)
+# Display the image at 70% of its original size
+st.image('images/movies.png', width=int(0.7 * 700))  # Assuming original width is around 700px
 
 user_id = st.number_input("Enter your user ID", min_value=1, max_value=943, step=1)
 
