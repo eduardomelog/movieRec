@@ -43,10 +43,10 @@ if st.button("Recomendar"):
     recommendations = get_recommendations(user_id)
     if not recommendations.empty:
         st.write("Películas que el usuario ha visto:")
-        watched_titles = movies_df[movies_df['movie_id'].isin(user_movie_matrix.loc[user_id].dropna().index)]
-        st.dataframe(watched_titles)
+        watched_titles = movies_df[movies_df['movie_id'].isin(user_movie_matrix.loc[user_id].dropna().index)]['title']
+        st.write(watched_titles.tolist())
         
         st.write("Películas recomendadas:")
-        st.dataframe(recommendations)
+        st.write(recommendations['title'].tolist())
     else:
         st.write("No se encontraron recomendaciones para este usuario.")
