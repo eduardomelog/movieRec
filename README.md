@@ -2,6 +2,8 @@
 
 This project features a movie recommendation model that uses user-based collaborative filtering. The idea is to suggest movies to a specific user based on the preferences of others with similar tastes.
 
+[![moviesite](images/site.png)](https://movierec-fxuvhvauu4fguna5fgzo9t.streamlit.app/)
+
 ### How the Model Works
 
 1. **User-Based Collaborative Filtering**:
