@@ -37,6 +37,9 @@ def get_recommendations(user_id, num_recommendations=5):
 # Streamlit App
 st.title("Movie Recommendation System")
 
+# Add a hyperlink to the GitHub repository
+st.markdown("[GitHub Repository](https://github.com/eduardomelog/movieRec)")
+
 # Display the image at 70% of its original size
 st.image('images/movies.png', width=int(0.7 * 700))  # Assuming original width is around 700px
 
