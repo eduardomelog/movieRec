@@ -2,11 +2,20 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Cargar datos
+# Cargar datos de películas y calificaciones
 movies_df = pd.read_csv('https://files.grouplens.org/datasets/movielens/ml-100k/u.item', sep='|', encoding='ISO-8859-1', 
                         header=None, usecols=[0, 1], names=['movie_id', 'title'])
 ratings_df = pd.read_csv('https://files.grouplens.org/datasets/movielens/ml-100k/u.data', sep='\t', encoding='ISO-8859-1', 
                          header=None, usecols=[0, 1, 2], names=['user_id', 'movie_id', 'rating'])
+
+# Extraer el año de estreno de los títulos de las películas
+movies_df['year'] = movies_df['title'].str.extract(r'\((\d{4})\)').astype(float)
+
+# Filtrar películas con año de estreno mayor que 2000
+movies_df = movies_df[movies_df['year'] > 2000]
+
+# Filtrar las calificaciones para que solo incluyan las películas filtradas
+ratings_df = ratings_df[ratings_df['movie_id'].isin(movies_df['movie_id'])]
 
 # Crear una tabla dinámica con usuarios y calificaciones
 user_movie_matrix = ratings_df.pivot_table(index='user_id', columns='movie_id', values='rating')
